@@ -8,10 +8,11 @@ CREATE TABLE
         picture varchar(255) COMMENT 'User Picture'
     ) default charset utf8 COMMENT '';
 
--- FIXME maybe we need to change something
+-- NOTE creates a new table in your sql database
 
 CREATE TABLE
     capybaras(
+        -- NOTE primary key must be unique across each row in your database
         id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
         name VARCHAR(10) NOT NULL COMMENT 'The name of our cute little dudes',
         ownedByGrandma BOOLEAN DEFAULT true COMMENT 'Keeps track of if this cute little dude was owned by a cute little grandma',
@@ -20,11 +21,17 @@ CREATE TABLE
         livesAtFarm BOOLEAN NOT NULL DEFAULT FALSE
     ) default charset utf8 COMMENT '';
 
+-- NOTE removes the table from our database
+
 DROP TABLE capybaras;
+
+-- NOTE adds columns to our table in the database
 
 ALTER TABLE capybaras
 ADD
     livesAtFarm BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- NOTE creates a new row (or piece of data) in our database
 
 INSERT INTO
     capybaras (
@@ -45,21 +52,39 @@ VALUES (
         3
     );
 
+-- NOTE selects all of the names from our database
+
 SELECT name FROM capybaras;
+
+-- NOTE selects two columns from our database
 
 SELECT name, applesEaten FROM capybaras;
 
+-- NOTE selects all columns and rows from our database
+
 SELECT * FROM capybaras;
+
+-- NOTE selects all rows and columns where the name is equal to 'Cappy'
 
 SELECT * FROM capybaras WHERE name = 'Cappy';
 
+-- NOTE selects all rows and columns where the name like "cap"
+
 SELECT * FROM capybaras WHERE name LIKE '%cap%';
+
+-- NOTE selects by Id
 
 SELECT * FROM capybaras WHERE id = 3;
 
+-- NOTE selects only the second item in our table
+
 SELECT * FROM capybaras LIMIT 1 OFFSET 1;
 
+-- NOTE delete by id
+
 DELETE FROM capybaras WHERE id = 2 LIMIT 1 ;
+
+-- NOTE edit
 
 UPDATE capybaras SET applesEaten = 9999 WHERE id = 3 LIMIT 1 ;
 
@@ -95,5 +120,7 @@ VALUES (
         true,
         6000
     );
+
+-- NOTE select the last created item in the database
 
 SELECT LAST_INSERT_ID();

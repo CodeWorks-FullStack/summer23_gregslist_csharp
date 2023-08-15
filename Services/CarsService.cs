@@ -40,6 +40,7 @@ public class CarsService
 
   internal Car RemoveCar(int carId)
   {
+    // NOTE runs the null check for us before sending off the delete request
     Car car = GetCarById(carId);
     _carsRepository.RemoveCar(carId);
     return car;

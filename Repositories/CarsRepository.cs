@@ -19,19 +19,27 @@ public class CarsRepository
     SELECT LAST_INSERT_ID()
     ;";
 
+    // NOTE ExecuteScalar will return a single value after running our sql query, in this case the id of the created item in our database
     int carId = _db.ExecuteScalar<int>(sql, carData);
 
+    // NOTE we can fran
     // carData.Id = carId;
+    // return carData;
 
     return carId;
   }
 
   internal Car GetCarById(int carId)
   {
+    // NOTE this opens us up to sql injection attacks, never interpolate into our sql strings
     // string sql = $"SELECT * FROM cars WHERE id = {carId};";
-    string sql = $"SELECT * FROM cars WHERE id = @carId;";
+
+    // NOTE the @ character indicates that we will pass an object to dapper with a property called carId
+    string sql = "SELECT * FROM cars WHERE id = @carId;";
 
 
+    // NOTE QueryFirstOrDefault will return us the first item that matches our sql query, or default to null
+    // NOTE the second argument that we pass to QueryFirstOrDefault is an object that we want dapper to sanitize and inject into our sql string
     Car car = _db.QueryFirstOrDefault<Car>(sql, new { carId });
 
     return car;
@@ -40,7 +48,12 @@ public class CarsRepository
 
   internal List<Car> GetCars()
   {
+    // NOTE create our sql string
     string sql = "SELECT * FROM cars;";
+
+    // NOTE Query will return a collection of items that match our sql query
+    // NOTE the first argument that we pass through to our Dapper query method is the sql query that we want dapper to run on our sql database
+    // NOTE We have .ToList() the final result since Dapper does not return a List to us
 
     List<Car> cars = _db.Query<Car>(sql).ToList();
 
@@ -52,6 +65,7 @@ public class CarsRepository
   {
     string sql = "DELETE FROM cars WHERE id = @carId LIMIT 1;";
 
+    // NOTE Execute will run our sql query and not return anything back
     _db.Execute(sql, new { carId });
   }
 
@@ -71,6 +85,7 @@ public class CarsRepository
     SELECT * FROM cars WHERE id = @Id
     ;";
 
+    // NOTE we run QueryFirstOrDefault here so that we update the car and then select that car so that we have proper updatedAt timestamps
     Car updatedCar = _db.QueryFirstOrDefault<Car>(sql, originalCar);
 
     return updatedCar;
